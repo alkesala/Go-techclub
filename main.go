@@ -17,16 +17,13 @@ type Response struct {
 
 func health(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
 	resp := Response{
 		Status: "OK",
 	}
-	err := json.NewEncoder(w).Encode(resp)
-	if err != nil {
-		log.Printf("InternalserverError %v", err)
-		http.Error(w, "Internalserver error", http.StatusInternalServerError)
-		return
+	if err := json.NewEncoder(w).Encode(resp); err != nil {
+		log.Printf("Error encoding json %s", err)
 	}
-	w.WriteHeader(http.StatusOK)
 
 }
 
