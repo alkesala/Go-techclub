@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 	"time"
 )
@@ -16,11 +17,17 @@ type Response struct {
 
 func health(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
 	resp := Response{
 		Status: "OK",
 	}
-	_ = json.NewEncoder(w).Encode(resp)
+	err := json.NewEncoder(w).Encode(resp)
+	if err != nil {
+		log.Printf("InternalserverError %v", err)
+		http.Error(w, "Internalserver error", http.StatusInternalServerError)
+		return
+	}
+	w.WriteHeader(http.StatusOK)
+
 }
 
 func brrr(w http.ResponseWriter, r *http.Request) {
