@@ -10,7 +10,6 @@ type Response struct {
 	Status  string `json:"status"`
 	Message string `json:"message"`
 }
-
 type RoastResponse struct {
 	ID    int    `json:"id"`
 	Roast string `json:"roast"`
@@ -21,7 +20,6 @@ var roasts = []RoastResponse{
 }
 var nextID = 2
 
-// Handle the json encoding error gracefully. Does anyone spot inconsistency?
 func health(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
@@ -59,24 +57,14 @@ func create(w http.ResponseWriter, r *http.Request) {
 	_ = json.NewEncoder(w).Encode(createRoast)
 }
 
-func roastHandler(w http.ResponseWriter, r *http.Request) {
-	switch r.Method {
-	case "GET":
-		get(w, r)
-	case "POST":
-		create(w, r)
-	default:
-		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(http.StatusMethodNotAllowed)
-		_ = json.NewEncoder(w).Encode(Response{Status: "error", Message: "Method not allowed"})
-	}
-}
-
+// TODO
+// implement roastHandler
+// func roastHandler()
 var port = 8080
 
 func main() {
 	http.HandleFunc("/health", health)
-	http.HandleFunc("/roasts", roastHandler)
+	//	http.HandleFunc("/roasts", roastHandler)
 	fmt.Printf("The server is up n running on %d\n", port)
 	_ = http.ListenAndServe(fmt.Sprintf(":%d", port), nil)
 }
